@@ -1,17 +1,38 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TihieZori.Data;
+using TihieZori.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseNpgsql(connectionString));
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddDefaultIdentity<AppUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;
+    options.Password.RequireDigit = true;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+})
+.AddRoles<IdentityRole>() // Добавляем поддержку ролей
+.AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddRazorPages();
+
+// Добавляем Authorization политики
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+});
 
 var app = builder.Build();
 
@@ -23,18 +44,26 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
 app.MapRazorPages()
    .WithStaticAssets();
+
+// Инициализация ролей и администратора
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await SeedData.InitializeAsync(services);
+}
 
 app.Run();
