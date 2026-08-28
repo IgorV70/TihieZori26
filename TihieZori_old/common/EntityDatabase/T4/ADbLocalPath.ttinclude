@@ -1,0 +1,8 @@
+﻿<#+ 
+			
+	 public class CDbatabasePath
+    {
+		public static string NameSpace = "EntityData";
+		public static string path=@"Entity.xml" ;
+    }
+#>

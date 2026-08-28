@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D31D197D-AF2E-44CC-8449-D9F71D4B929C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TihieZoriDb</RootNamespace>
+    <AssemblyName>TihieZoriDb</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AccrualFile.cs">
+      <DependentUpon>ACreateDatabaseCS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ACreateDatabaseCS.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ACreateDatabaseCS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="AdvertFile.cs">
+      <DependentUpon>ACreateDatabaseCS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CustomFilters\PaymentFiltrPeriod.cs" />
+    <Compile Include="CustomFilters\AccrualFiltr.cs" />
+    <Compile Include="CustomFilters\PaymentFiltr.cs" />
+    <Compile Include="CustomFilters\UserFiltr.cs" />
+    <Compile Include="DbVersion.cs" />
+    <Compile Include="DbVersionFile.cs">
+      <DependentUpon>ACreateDatabaseCS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DiscussFile.cs">
+      <DependentUpon>ACreateDatabaseCS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DocumentsFile.cs">
+      <DependentUpon>ACreateDatabaseCS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FeedbacksFile.cs">
+      <DependentUpon>ACreateDatabaseCS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="FinDocumentsFile.cs">
+      <DependentUpon>ACreateDatabaseCS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="PaymentFile.cs">
+      <DependentUpon>ACreateDatabaseCS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProposeFile.cs">
+      <DependentUpon>ACreateDatabaseCS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="RoleEnum.cs" />
+    <Compile Include="RolesFile.cs">
+      <DependentUpon>ACreateDatabaseCS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SessionFile.cs">
+      <DependentUpon>ACreateDatabaseCS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SitePageFile.cs">
+      <DependentUpon>ACreateDatabaseCS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Roles.cs" />
+    <Compile Include="User.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserFile.cs">
+      <DependentUpon>ACreateDatabaseCS.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="AClassTemplate.ttinclude" />
+    <None Include="ADbLocalPath.ttinclude" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ACreateDatabaseCS.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ACreateDatabaseCS.cs</LastGenOutput>
+      <LastOutputs>
+.\AccrualFile.cs
+.\AdvertFile.cs
+.\DbVersionFile.cs
+.\DiscussFile.cs
+.\DocumentsFile.cs
+.\FeedbacksFile.cs
+.\FinDocumentsFile.cs
+.\PaymentFile.cs
+.\ProposeFile.cs
+.\RolesFile.cs
+.\SessionFile.cs
+.\SitePageFile.cs
+.\UserFile.cs
+</LastOutputs>
+    </Content>
+    <Content Include="TihieZori.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="WeigherDatabase.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\DbCommon\DbCommon.csproj">
+      <Project>{765a01e5-26af-4c98-9afc-a645f4b002f1}</Project>
+      <Name>DbCommon</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

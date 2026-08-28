@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SqlSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <DatabaseType>MsSql</DatabaseType>
+  <SqlConnectionSettings>
+    <ServerLocal>true</ServerLocal>
+    <ServerName>(local)</ServerName>
+    <BdName>u0625165_zori</BdName>
+    <Login>sa</Login>
+    <Password>sa123456</Password>
+    <Trusted>true</Trusted>
+  </SqlConnectionSettings>
+</SqlSettings>

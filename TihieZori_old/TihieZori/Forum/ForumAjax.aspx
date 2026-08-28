@@ -1,0 +1,1 @@
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="ForumAjax.aspx.cs" Inherits="TihieZori.Forum.ForumAjax" %>

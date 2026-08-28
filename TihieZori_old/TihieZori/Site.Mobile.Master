@@ -1,0 +1,125 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Mobile.master.cs" Inherits="TihieZori.Site_Mobile" %>
+
+<%@ Register Src="~/ViewSwitcher.ascx" TagPrefix="friendlyUrls" TagName="ViewSwitcher" %>
+<%@ Register Src="~/Crumbs.ascx" TagPrefix="uc1" TagName="Crumbs" %>
+<%@ Register Src="~/LoginMenu.ascx" TagPrefix="mnu" TagName="LoginMenu" %>
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head runat="server">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%: Page.Title %> - ДНТ Тихие зори</title>
+
+    <script type="text/javascript" src="jquery/jquery-3.3.1.js"></script>
+    <script type="text/javascript" src="Scripts/bootstrap.js"></script>
+
+    <link href="Scripts/jquery-ui.css" rel="stylesheet" />
+    <link href="Scripts/jquery-ui.theme.css" rel="stylesheet" />
+
+    <script type="text/javascript" src="Scripts/jquery-ui.js"></script>
+
+    <link href="Content/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="Content/Site.css" rel="stylesheet" type="text/css" media="all" />
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+
+</head>
+<body>
+    <div class="container body-content">
+        <div class="container">
+            <div class="row">&nbsp;</div>
+            <div class="container">
+                <div class="row topimg">
+                    <div class="col-xs-12 koleso">Дачное некоммерческое товарищество "Тихие зори"</div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-1"></div>
+                <div class="col-xs-10">
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                            <li><a runat="server" href="~/">Главная</a></li>
+                            <li><a runat="server" href="~/VznosiPage.aspx">Членские и паевые взносы</a></li>
+            <% if (UserRole != TihieZoriDb.RoleEnum.Guest)
+               { %>
+                            <li><a runat="server" href="~/PageAccruals.aspx">Расчеты по взносам</a></li>
+                            <li><a runat="server" href="~/PageFinDocument.aspx">Финансовые документы(сметы)</a></li>
+            <% } %>
+                            <li><a runat="server" href="~/Rekvizits.aspx">Реквизиты</a></li>
+                            <li><a runat="server" href="~/PageDocument.aspx">Документы</a></li>
+                            <li><a runat="server" href="~/DiscussionPage.aspx">Обсуждение</a></li>
+                            <li><a runat="server" href="~/PageAdvert.aspx">Объявления</a></li>
+                            <li><a runat="server" href="~/PageMap.aspx">Карта участков</a></li>
+                            <li><a runat="server" href="~/Contact.aspx">Контакты</a></li>
+                            <li><a runat="server" href="~/Reglament.aspx">Регламент работы ДНТ</a></li>
+                            <mnu:LoginMenu ID="LoginMenu1" runat="server" />
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xs-1"></div>
+            </div>
+            <% if (UserRole == TihieZoriDb.RoleEnum.Admin)
+               { %>
+            <div class="navbar-collapse collapse" style="border: solid 1px red; font-size: large">
+                <ul class="nav navbar-nav">
+                    <li><a runat="server" href="~/AdmDocuments.aspx">Добавление документов</a></li>
+                    <li><a runat="server" href="~/AdmAdvert.aspx">Объявления</a></li>
+                    <li><a runat="server" href="~/AdmUsers.aspx">Пользователи</a></li>
+                    <li><a runat="server" href="~/AdmForum.aspx">Обсуждение</a></li>
+                    <li><a runat="server" href="~/AdmAccruals.aspx">Расчеты по взносам</a></li>
+                    <li><a runat="server" href="~/AdmFinDocuments.aspx">Финансовые документы</a></li>
+                </ul>
+            </div>
+            <% } %>
+        </div>
+
+        <uc1:Crumbs runat="server" ID="Crumbs" />
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-1"></div>
+                <div class="col-xs-10" style="background-color: #EFEFEF">
+                    <div class="row">
+                        <div class="col-xs-3" style="background-color: aliceblue">
+                            <div id="cc-matrix-1369639286">
+                                <div id="cc-m-6017275886" class="j-module n j-hr ">
+                                    <div class="hr"></div>
+                                </div>
+                                <div id="cc-m-6017275186" class="j-module n j-header ">
+                                    <h3 class="" id="cc-m-header-6017275186">Контакт</h3>
+                                </div>
+                                <div id="cc-m-6017275086" class="j-module n j-text ">
+                                    <p>
+                                        телефон: +7 (913)&nbsp;945 85 76&nbsp;
+                                    </p>
+
+                                    <p>
+                                        Адрес: 630057, г.Новосибирск, ул. Софийская, 2б корпус 1, второй этаж&nbsp;(Правление)
+                                    </p>
+
+                                    <p>
+                                        Председатель правления:&nbsp;Чахлова Яна Ивановна &nbsp; &nbsp;
+                                    </p>
+                                </div>
+                                <div id="cc-m-6033068486" class="j-module n j-text "></div>
+                            </div>
+                        </div>
+                        <div class="col-xs-9">
+                            <asp:ContentPlaceHolder ID="MainContent" runat="server"></asp:ContentPlaceHolder>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-1"></div>
+            </div>
+        </div>
+        <hr />
+        <footer>
+            <p>&copy; <%: DateTime.Now.Year %> - ДНТ Тихие зори</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{EE06F771-D101-4151-9C9C-50D93D6F2EA2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EntityDatabase</RootNamespace>
+    <AssemblyName>EntityDatabase</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CDatabaseEntity.cs" />
+    <Compile Include="DataProject.cs" />
+    <Compile Include="Postgree\Dialect.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="T4\ACreateDatabaseCS.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ACreateDatabaseCS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T4\DatabaseFile.cs">
+      <DependentUpon>ACreateDatabaseCS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T4\FieldFile.cs">
+      <DependentUpon>ACreateDatabaseCS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T4\RelationFile.cs">
+      <DependentUpon>ACreateDatabaseCS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="T4\TableFile.cs">
+      <DependentUpon>ACreateDatabaseCS.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Table.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DbCommon\DbCommon.csproj">
+      <Project>{765a01e5-26af-4c98-9afc-a645f4b002f1}</Project>
+      <Name>DbCommon</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="T4\AClassTemplate.ttinclude" />
+    <None Include="T4\ACreateDatabaseCS.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ACreateDatabaseCS.cs</LastGenOutput>
+      <LastOutputs>
+.\ACreateDatabaseCS.cs
+.\DatabaseFile.cs
+.\FieldFile.cs
+.\RelationFile.cs
+.\TableFile.cs
+</LastOutputs>
+    </None>
+    <None Include="T4\ADbLocalPath.ttinclude" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="T4\Entity.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

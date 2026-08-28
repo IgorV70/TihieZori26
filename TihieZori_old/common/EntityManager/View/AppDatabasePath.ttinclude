@@ -1,0 +1,8 @@
+﻿<#@ IntelliSenseLanguage processor="tangibleT4Editor" language="C#" #>
+<#+ 
+	
+	 public class CDbatabasePath
+    {
+		public static string path=@"C:\Projects\Hunter\EntityDatabase\T4\Entity.xml" ;
+    }
+#>

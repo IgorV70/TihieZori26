@@ -1,0 +1,56 @@
+﻿<#@ include file="T4Toolbox.tt" #>
+
+<#+
+public class ViewTemplate : Template
+{
+	Database db;
+	Table table;
+
+	public ViewTemplate(Database db,Table table)
+	{
+		this.db = db ;
+		this.table = table ;
+	}
+	
+    public override string TransformText()
+    {
+#>
+<UserControl x:Class="EntityManager.View.<#= table.Name #>ViewT4"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="350">
+	<StackPanel>
+<#+ 
+            foreach (Field f in table.FieldList)
+            {
+				switch(f.FType)
+				{
+					case "bit":
+#>      <DockPanel >
+            <Label Width="120" Height="28" ><#= f.Comment #></Label>
+            <CheckBox Width="16" Height="16" IsChecked="{Binding Selected.<#= f.Name #>}"/>
+        </DockPanel>
+
+<#+						break;
+					default:
+#>		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" ><#= f.Comment #></Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.<#= f.Name #>}"/>
+		</StackPanel>
+<#+ 
+						break;
+                }
+            }        
+#>
+	</StackPanel>
+
+</UserControl>
+<#+ 
+
+			return this.GenerationEnvironment.ToString();
+    }
+}
+#>

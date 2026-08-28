@@ -1,0 +1,47 @@
+﻿<UserControl x:Class="EntityManager.View.RelationViewT4"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="350">
+	<StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Первичный ключ, автонумератор</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.Id}"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Наименование параметра</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.Name}"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Комментарий</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.Comment}"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Ссылка на таблицу</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.TableId}"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Тип связи</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.RType}"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Таблица с ключом</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.PrimaryKeyTable}"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Название поля ключа</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.PrimaryKeyFieldList}"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Таблица со ссылкой</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.ForeignKeyTable}"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Поле со ссылкой</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.ForeignKeyFieldList}"/>
+		</StackPanel>
+	</StackPanel>
+
+</UserControl>

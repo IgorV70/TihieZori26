@@ -1,0 +1,1 @@
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="LoginMenu.ascx.cs" Inherits="TihieZori.LoginMenu" %>

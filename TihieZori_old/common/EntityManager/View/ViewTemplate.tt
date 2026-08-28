@@ -1,0 +1,34 @@
+﻿<#@ template inherits="Microsoft.VisualStudio.TextTemplating.VSHost.ModelingTextTransformation" language="C#" debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Xml.dll" #>
+<#@ Assembly Name="System.Windows.Forms.dll" #>
+<#@ Assembly Name="Microsoft.VisualStudio.TextTemplating.Modeling.12.0.dll" #>
+<#@ Assembly Name="$(ProjectDir)\..\EntityDatabase\bin\Debug\DbCommon.dll" #>
+<#@ Assembly Name="$(ProjectDir)\..\EntityDatabase\bin\Debug\EntityDatabase.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.Xml.Serialization" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="EntityData" #>
+<#@ include file="XamlGenerator.tt" #>
+<#@ include file="AppDatabasePath.ttinclude" #>
+<#
+
+	CDataProject _project = null;                
+ 	using (TextReader tw = new StreamReader(CDbatabasePath.path))
+	{
+	    XmlSerializer ser_er = new XmlSerializer(typeof(CDataProject));
+	    _project = (CDataProject)ser_er.Deserialize(tw);
+	    tw.Close();
+	}
+	
+	Database db = _project.DataBaseList[0] ;	
+	foreach(var table in _project.DataBaseList[0].TableList)
+	{
+		  ViewTemplate t = new ViewTemplate(_project.DataBaseList[0],table);
+		  t.Output.File = table.Name+"ViewT4.xaml";
+		  t.Render();		
+	}
+	
+#>

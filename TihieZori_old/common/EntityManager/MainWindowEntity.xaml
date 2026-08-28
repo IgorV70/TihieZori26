@@ -1,0 +1,47 @@
+﻿<Window x:Class="EntityManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:view="clr-namespace:EntityManager.View"
+        xmlns:c="clr-namespace:EntityManager.Common"
+        Title="EntityManager" Height="700" Width="700" Closing="Window_Closing">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Menu>
+            <MenuItem x:Name="File" Header="Файл" >
+                <MenuItem x:Name="CreateFile" Header="Новый" HorizontalAlignment="Left" Click="CreateFile_OnClick" InputGestureText="Ctrl+O">
+                    <MenuItem.Icon >
+                        <Image Source="/Resources/open.png"></Image>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="OpenFile" Header="Открыть" HorizontalAlignment="Left" Click="OpenFile_OnClick" InputGestureText="Ctrl+O">
+                    <MenuItem.Icon >
+                        <Image Source="/Resources/open.png"></Image>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="Save" Header="Сохранить" HorizontalAlignment="Left" Click="Save_OnClick" >
+                    <MenuItem.Icon >
+                        <Image Source="/Resources/save.png"></Image>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem x:Name="SaveAs" Header="Сохранить как" HorizontalAlignment="Left" Click="SaveAs_OnClick" >
+                    <MenuItem.Icon >
+                        <Image Source="/Resources/save.png"></Image>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <c:RecentFileList x:Name="RecentFileList" />
+                <MenuItem  x:Name="Exit" Header="Выход" HorizontalAlignment="Left" Click="Exit_OnClick"/>
+            </MenuItem>
+            <MenuItem Header="О программе" HorizontalAlignment="Left" Width="145"/>
+        </Menu>
+        <DockPanel Grid.Row="1" >
+            <view:TreeView x:Name="TreeView1" DockPanel.Dock="Left" TreeView.SelectedItemChanged="TreeView_OnSelectedItemChanged"></view:TreeView>
+            <Rectangle DockPanel.Dock="Left" Width="3" Fill="Aqua"/>
+            <DockPanel Name="DockPanel1"></DockPanel>
+        </DockPanel>
+    </Grid>
+</Window>

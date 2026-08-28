@@ -1,0 +1,455 @@
+﻿<#@ include file="T4Toolbox.tt" #>
+
+<#+
+public class TableTemplate : Template
+{
+	CDataBase db;
+	CTable table;
+	string tableClassName;
+	string rowClassName;
+	string dbClassName;
+
+	public TableTemplate(CDataBase db,CTable table)
+	{
+		this.db = db ;
+		this.table = table ;
+		//tableClassName = "CTableDesc" + table.Name ;
+		//rowClassName = "CRow" + table.Name ;
+		//dbClassName = "CDatabase" + db.Name ;
+		tableClassName = "CTable" + table.Name ;
+		rowClassName = table.Name ;
+		dbClassName = "CDatabase" + db.Name ;
+	}
+	
+    public override string TransformText()
+    {
+#>
+// This is the output code from your template
+// you only get syntax-highlighting here - not intellisense
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using DbCommon;
+using System.Drawing;
+using System.Xml.Serialization;
+
+
+namespace <#= db.Name #>Data{
+  public partial class <#= tableClassName #>: CTable< <#= rowClassName #>, <#= dbClassName #>,<#= table.PrimaryKeyType#>>
+  {
+  	<#= tableClassName #>()
+	{}
+	        public <#= tableClassName #>(<#= dbClassName #> db)
+            : base(db)
+        { 
+			IsChangesLog = <#= table.IsChangesLog.ToString().ToLower() #>;
+<#+ 
+            foreach (CField f in table.FieldList)
+            {
+#>			_fd["<#= f.Name #>"] = new FieldDescription(typeof(<#= rowClassName #>), "<#= f.Name #>", "<#= f._sharpType #>", "<#= f.FType #>", <#= f.Size.ToString() #>, <#= f.Size2.ToString() #>, <#= f.WritePropList() #>);
+<#+ 
+            }        
+#>
+        }		
+<#+			if (!string.IsNullOrEmpty(table.TableName))
+				{#>
+	        public override string TableName()
+        {
+            return TablePrefix()+"<#=  table.TableName #>";
+        }
+<#+ 				} #>
+<#+			if (!string.IsNullOrEmpty(table.TableName_select))
+				{#>
+	        public override string TableName_select()
+        {
+            return TablePrefix()+"<#=  table.TableName_select #>";
+        }
+<#+ 				} #>
+
+
+		<#+ if (table.CashType != null){ #>		
+		public override CasheType GetCashType()
+        {
+            return CasheType.<#= table.CashType #>;
+        }
+		<#+ } #>		
+	}
+	
+
+	/// <summary>
+	/// <#= table.Comment #>
+	/// </summary>
+<#+	  if (table.xmlType != null)  {
+#>	[XmlType("<#= table.xmlType #>")]
+<#+	  }
+#>
+	public partial class <#= rowClassName #> : BObject<#= table.IsB1Object?",IPrimaryKey<" + table.PrimaryKeyType + ">":"" #> 
+    {
+        public <#= rowClassName #>() { }
+        public <#= rowClassName #>(<#= tableClassName #> t)
+            : base(t)
+        { }
+<#+		            foreach (CField f in table.FieldList)
+            {
+				
+				if (f.IsPostPoned)
+				{
+#>
+        private <#= table.Name + "PP" #> _p<#= table.Name + "PP" #> = null;
+        
+		/// <summary>
+		/// <#= f.Comment #>
+		/// </summary>
+		
+        [XmlAttribute]
+        
+        public <#= f._sharpType #> <#= f.Name #>
+        {
+            get
+            {
+                if (_p<#= table.Name + "PP" #> == null && this.id > 0)
+                    _p<#= table.Name + "PP" #> = (<#= table.Name + "PP" #>)_table.parentDataBase.GetObjectByKey(((CDatabase<#= db.Name #>)_table.parentDataBase).<#= table.Name + "PP" #>, "id", this.id);
+                if (_p<#= table.Name + "PP" #> == null)
+					_p<#= table.Name + "PP" #> = (<#= table.Name + "PP" #>)((CDatabase<#= db.Name #>)_table.parentDataBase).<#= table.Name + "PP" #>.CreateInstance();
+                return _p<#= table.Name + "PP" #>.<#= f.Name #>;
+            }
+            set
+            {
+                if (_p<#= table.Name + "PP" #> == null)
+                {
+                    <#= f._sharpType #> dummy = this.<#= f.Name #>;
+                }
+                _p<#= table.Name + "PP" #>.<#= f.Name #> = value;
+                SetDirtyFlag();
+            }
+        }
+
+<#+ 
+					continue ;
+				}
+				if (f.Name.ToLowerInvariant()=="id")
+				{
+					f.DefaultValue="0";
+				}
+#>
+
+		private <#= f._sharpType #> <#= f._name#> = <#= f._sharpDefaultValue #>;
+		
+		/// <summary>
+		/// <#= f.Comment #>
+		/// </summary>
+		[XmlAttribute]
+        public <#= f._sharpType #> <#= f.Name #>
+        {
+            get { return <#= f._name#>; }
+            set { 
+					SetProperty(ref <#= f._name#>, value); 
+					OnPropertyChanged("<#= f.Name#>");
+				}
+        }
+<#+ 
+					if (!string.IsNullOrEmpty(f.ForeignKeyTable))
+					{
+						string fObjectName = f.ForeignObjectName ?? f.ForeignKeyTable;
+						if (f.IsCashForeignObj)
+                        {
+#>
+		<#= f.ForeignKeyTable #> <#= f._name+"Object" #> ;
+		/// <summary>
+		/// ссылка на внешний объект(только для случая когда 1 первичный ключ)
+		/// </summary>
+		[XmlIgnore]
+        public <#= f.ForeignKeyTable #> <#= fObjectName #>
+        {
+		
+            get 
+			{ 
+				if (<#= f._name+"Object" #> == null)
+					<#= f._name+"Object" #> = ((CDatabase<#= db.Name #>)_table.parentDataBase).<#= f.ForeignKeyTable #>.GetById(<#= f._name#>);
+				return <#= f._name+"Object" #> ; 
+			}
+            set 
+			{ 
+				if (value == null)
+				{
+					this.<#= f.Name #> = <#= f._sharpDefaultValue #> ;
+					this.<#= f._name+"Object" #> = null ;
+				}
+				else
+				{
+					this.<#= f.Name #> = value.Id ;
+					this.<#= f._name+"Object" #> = value ;
+				}
+			}
+        }
+<#+ 
+						}
+						else
+                        {
+#>
+		/// <summary>
+		/// ссылка на внешний объект(только для случая когда 1 первичный ключ)
+		/// </summary>
+		[XmlIgnore]
+        public <#= f.ForeignKeyTable #> <#= fObjectName #>
+        {
+		
+            get { return ((CDatabase<#= db.Name #>)_table.parentDataBase).<#= f.ForeignKeyTable #>.GetById(<#= f._name#>); }
+            set { this.<#= f.Name#> = value == null ? <#= f._sharpDefaultValue #> : value.Id ; }
+        }
+<#+ 
+						}
+					}
+			}
+			
+			bool ExistsDependentRelations = false;
+			
+			foreach (CRelation rel in table.RelationList)
+            {
+				if (rel.RType != "dependent") continue ;
+				ExistsDependentRelations = true;
+				string DependType=rel.ForeignKeyTable;
+				string PropertyListName = rel.Name;
+				string PropertyPrivateName = "_" + PropertyListName.ToLower() ;
+				string[] pka = rel.PrimaryKeyFieldList.Split(',') ;
+				string[] fka = rel.ForeignKeyFieldList.Split(',') ;
+#>	
+        private SortList< <#= DependType#> > <#= PropertyPrivateName#> = null;
+        
+        [XmlArray]
+        public SortList< <#= DependType#> > <#= PropertyListName#>
+        {
+            get
+            {
+                if (<#= PropertyPrivateName#> != null) return <#= PropertyPrivateName#>;
+				if (_table != null)
+				{
+					var thisid = this.Id ;
+					<#= PropertyPrivateName#> = ((CDatabase<#= db.Name#>)_table.parentDataBase). <#= DependType#> .GetObjectListByExpr(obj => obj.<#= fka[0]#> == thisid);
+				}
+				else
+					<#= PropertyPrivateName#> = new SortList< <#= DependType#> >(_table);
+				return <#= PropertyPrivateName#>;
+            }
+        }
+
+<#+ 
+            }        
+
+		if (ExistsDependentRelations || table.IsChangesLog) {
+			if (ExistsDependentRelations) {
+#>
+
+        public override object DeepClone(int deep = 99)
+        {
+            var t = (<#= rowClassName #>)Clone();
+			if (deep > 0)
+<#+				
+				foreach (CRelation rel in table.RelationList)
+				{
+					if (rel.RType != "dependent") continue ;
+					string PropertyListName = rel.Name;
+					string PropertyPrivateName = "_" + PropertyListName.ToLower() ;
+#>             t.<#=PropertyPrivateName#> = <#= PropertyListName#>.CloneAll(deep-1);             
+<#+ 
+				} 
+#>          return t;
+        }
+
+
+		[XmlIgnore]
+        public override BObject.ObjectStateType ObjectState
+        {
+            get
+            {
+                if (_objectState != BObject.ObjectStateType.Unchanged)
+                    return _objectState;
+				BObject.ObjectStateType list_state = BObject.ObjectStateType.Unchanged;	
+<#+				
+				foreach (CRelation rel in table.RelationList)
+				{
+					if (rel.RType != "dependent") continue ;
+					string PropertyListName = rel.Name;
+					string PropertyPrivateName = "_" + PropertyListName.ToLower() ;
+#>              
+				if (<#=PropertyPrivateName#> != null)
+				{  
+					list_state = this.<#= PropertyListName#>.ObjectListState();
+					if (list_state != BObject.ObjectStateType.Unchanged)
+						return list_state;
+				}
+<#+ 
+				} 
+#>					
+				return list_state;
+            }
+		}
+
+<#+ 
+			}
+			if (table.IsChangesLog) { 
+#>	
+        public override void Save2()
+        {
+            Save2WLog("", "");
+        }
+
+        /// <summary>
+        /// Сохранение с указанием автора и комментария к логам
+        /// </summary>
+        public void Save2WLog(string comment, string avtor)
+<#+ 
+        } else {
+#>			
+        public override void Save2()
+<#+ 
+        } 
+#>			
+        {
+            ObjectStateType state = this.ObjectState;
+            if (state == ObjectStateType.Unchanged)
+            {
+                return;
+            }
+<#+ 
+            if (table.IsChangesLog) { 
+#>			
+
+            List<ChangedValuesItem> changes = null;
+            if (state == ObjectStateType.Changed)
+            {
+                changes = GetChangedValuesToLog();
+            }
+<#+ 
+            } 
+            if (ExistsDependentRelations) {
+#>			
+                
+            if (state == ObjectStateType.Deleted)
+            {
+                // удаление каскадное !
+                base.Save2();
+                return;
+            } 
+<#+ 
+            } 
+#>			
+			
+            base.Save2();
+			
+<#+		
+			if (ExistsDependentRelations) {
+				foreach (CRelation rel in table.RelationList)
+				{
+					if (rel.RType != "dependent") continue ;
+					ExistsDependentRelations = true;
+					string DependType=rel.ForeignKeyTable;
+					string PropertyListName = rel.Name;
+					string PropertyPrivateName = "_" + PropertyListName.ToLower() ;
+					string[] pka = rel.PrimaryKeyFieldList.Split(',') ;
+					string[] fka = rel.ForeignKeyFieldList.Split(',') ;
+#>	
+            foreach (<#= DependType#> obj in this.<#= PropertyListName#>)
+                obj.<#= fka[0]#> = this.Id;
+            this.<#= PropertyListName#>.Save();
+<#+ 
+				} 
+			}
+#>			
+<#+ 
+            if (table.IsChangesLog) { 
+#>			
+
+            if (this.ObjectState == ObjectStateType.Unchanged)
+            {
+                CDatabaseGpsrf dbGps = (CDatabaseGpsrf)_table.parentDataBase;
+
+                if (state == ObjectStateType.Changed && changes != null && changes.Count > 0)
+                {
+                    TableValueChangesLog.SaveLog(dbGps, changes, comment, avtor, this.id, this.LogRecordName());
+                }
+                else if (state == ObjectStateType.Added || state == ObjectStateType.Deleted)
+                {
+                    changes = new List<ChangedValuesItem>();
+                    ChangedValuesItem item = new ChangedValuesItem();
+                    item.TableName = this._table.TableName();
+
+                    if (state == ObjectStateType.Added)
+                    {
+                        item.RecordNew = true;
+                    }
+                    else if (state == ObjectStateType.Deleted)
+                    {
+                        item.RecordDelete = true;
+                    }
+                    changes.Add(item);
+
+                    TableValueChangesLog.SaveLog(dbGps, changes, comment, avtor, this.id, this.LogRecordName());
+                }
+            }
+<#+ 
+            } 
+#>			
+
+            return;
+        }
+<#+ 
+            if (ExistsDependentRelations) {
+#>			
+
+        public override void Rollback()
+        {
+            base.Rollback();
+			
+<#+
+				foreach (CRelation rel in table.RelationList)
+				{
+					if (rel.RType != "dependent") continue ;
+					ExistsDependentRelations = true;
+					string DependType=rel.ForeignKeyTable;
+					string PropertyListName = rel.Name;
+					string PropertyPrivateName = "_" + PropertyListName.ToLower() ;
+					string[] pka = rel.PrimaryKeyFieldList.Split(',') ;
+					string[] fka = rel.ForeignKeyFieldList.Split(',') ;
+#>	
+            this.<#= PropertyListName#>.Rollback();
+<#+ 
+				} 
+#>
+        }
+	
+<#+ 			
+	}		
+			
+    if (table.HavePostPonedField)
+	{
+#>
+        public override void Save2()
+        {
+            base.Save2();
+            if (_p<#= table.Name + "PP" #> != null)
+            {
+                _p<#= table.Name + "PP" #>.id = this.id;
+                B1Object persist = (B1Object)_p<#= table.Name + "PP" #>.GetPersist();
+                if (persist != null)
+                    persist.id = this.id;
+                _p<#= table.Name + "PP" #>.Save2();
+            }
+        }
+	
+<#+ 
+		}
+	}
+#>
+    }
+
+}
+	
+<#+ 
+
+			return this.GenerationEnvironment.ToString();
+    }
+}
+#>

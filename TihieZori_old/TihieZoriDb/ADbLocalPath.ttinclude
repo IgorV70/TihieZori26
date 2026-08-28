@@ -1,0 +1,6 @@
+﻿<#+ 
+	 public class CDbatabasePath
+    {
+		public static string path=@"TihieZori.xml" ;
+    }
+#>

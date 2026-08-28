@@ -1,0 +1,182 @@
+﻿/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+    background-image: url('../img/bg.jpg');
+    background-position: left top;
+    background-origin: padding-box;
+    background-size: cover;
+    font-family: tymes new roman;
+}
+
+/* Wrapping element */
+/* Set some basic padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set widths on the form inputs since otherwise they're 100% wide */
+input,select {max-width: 280px;}
+
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+    .jumbotron {
+        margin-top: 20px;
+    }
+
+    .body-content {
+        padding: 0;
+        margin: 5px;
+    }
+}
+
+.navbar-inverse {
+    background-image: url('../img/bg.jpg');
+    border-color: #080808;
+}
+
+
+.navbar-fixed-top, .navbar-fixed-bottom {
+    position: fixed;
+    right: 0;
+    left: 0;
+    border-width: 0 0 2px;
+    border-color: red;
+}
+
+.phone {
+    font-size: large;
+    font-weight: bold
+}
+
+.button {
+    background-color: white;
+    width: 230px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #5786b8;
+    display: flex;
+}
+
+.form {
+    background-color: white;
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #5786b8;
+    margin: 20px;
+}
+
+
+    .button a {
+        display: inline-block;
+        margin: auto;
+        font-family: a_SeriferCps;
+        font-weight: bold;
+        font-size: x-large;
+    }
+
+@font-face {
+    font-family: 'ProunX';
+    font-style: normal;
+    font-weight: 100;
+    src: local('ProunX'), local('ProunX-Normal'), url(../img/prounx.ttf) format('truetype');
+}
+
+@font-face {
+    font-family: 'ProunX Bold';
+    font-style: normal;
+    font-weight: 700;
+    src: local('ProunX Bold'), local('ProunX-Bold'), url(../img/prounx-bold.ttf) format('truetype');
+}
+
+.topimg {
+    background-image: url('../img/RedBag.jpg');
+    height: 190px;
+    background-position: center;
+    background-repeat: no-repeat;
+    vertical-align: bottom;
+    position: relative;
+}
+
+.koleso {
+    font-family: "ProunX Bold";
+    font-size: 23px;
+    color: green;
+    text-shadow: #000 1px 0 0px, #000 0 1px 0px, #000 -1px 0 0px, #000 0 -1px 0px;
+    position: absolute;
+    bottom: 0;
+    text-align: center;
+}
+
+.crumbs {
+    font-style: italic
+}
+
+.center {
+    text-align: center;
+}
+
+.c {
+    text-align: center;
+}
+
+.r {
+    text-align: right;
+}
+
+input[type=text] {
+    width: 250px;
+}
+
+div.advert {
+    border-width: 2px;
+    border-color: blue;
+    border-style: solid;
+    margin: 7px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+    padding-top: 10px;
+    border-radius: 10px
+}
+    div.advert h3 {
+        font-weight: bold; color:blueviolet;
+    }
+    div.advert .date {
+        font-weight: bold;
+        color: blue;
+    }
+
+div.col2 {
+    column-width: 300px;
+    column-count: 2;
+    column-gap: 30px;
+    column-rule: 1px solid #ccc;
+}
+
+a.adoc {
+    color:black
+}
+
+a.adoc:hover {
+    color: blue;
+    font-style:italic;
+}
+
+tr.error {
+    color:red
+}
+
+.f1 {
+    background-color: azure
+}
+
+td.sum {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    text-align:end;
+}

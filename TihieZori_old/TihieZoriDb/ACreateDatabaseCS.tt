@@ -1,0 +1,144 @@
+﻿<#@ template language="C#" debug="true" hostSpecific="true" #>
+<#@ output extension=".cs" #>
+<#@ Assembly Name="System.Xml.dll" #>
+<#@ Assembly Name="System.Windows.Forms.dll" #>
+<#@ Assembly Name="$(ProjectDir)\..\Common\DbCommon\bin\Debug\DbCommon.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.Xml.Serialization" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="DbCommon.Metadata" #>
+<#@ import namespace="Microsoft.VisualStudio.TextTemplating" #>
+<#@ include file="AClassTemplate.ttinclude" #>
+<#@ include file="ADbLocalPath.ttinclude" #>
+
+<#
+
+	CProject _project = null;                
+ 	using (TextReader tw = new StreamReader(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Host.TemplateFile),System.IO.Path.GetFileName(CDbatabasePath.path))))
+	{
+	    XmlSerializer ser_er = new XmlSerializer(typeof(CProject));
+	    _project = (CProject)ser_er.Deserialize(tw);
+	    tw.Close();
+	}
+	
+	CDataBase db = _project.DataBaseList[0] ;	
+	
+#>
+
+using System.Data.Common;
+using DbCommon;
+
+
+// <#= System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Host.TemplateFile),CDbatabasePath.path)  #>
+namespace <#= db.Name #>Db
+{
+<# 
+	if (!string.IsNullOrEmpty(db.TableCaption))
+	{
+#>
+    public interface iCaption
+    {
+        Caption GetCaptionOnField(string tname, string fname, bool collect, string textFromForm);
+        Caption GetCaptionOnElementName(string formName, string elementName, bool collect, string textFromForm);
+        Caption GetCaptionOnForm(string formName, bool collect, string textFromForm);
+        Caption GetCaptionOnTable(string tName, bool collect);
+    }
+	    public interface iCaptionDB
+    {
+        iCaption TableCaption { get; }
+        iTable TableLocString { get; }
+    }
+
+<# 
+	}
+#>
+
+    public partial class CDatabase<#= db.Name #> : CDatabase 
+<# 	if (!string.IsNullOrEmpty(db.TableCaption) ){#>,iCaptionDB<#}#>
+<# 	if (!string.IsNullOrEmpty(db.TableLang) ){#>,iLangDatabase<#}#>
+	{
+	    public CDatabase<#= db.Name #>(): base(DatabaseType.MsSql)
+        {
+            Init();
+        }
+
+        public CDatabase<#= db.Name #>(DatabaseType databaseType)
+            : base(databaseType)
+        {
+            Init();
+        }
+
+        public CDatabase<#= db.Name #>(DatabaseType databaseType,string connectionString)
+            : base(databaseType)
+        {
+            _sConnectionString = connectionString;
+            Init();
+			ConnectionMode = DbCommon.Enums.ConnectionModes.DatabaseConnection;
+        }
+
+        public string CDatabaseName = "<#= db.Name #>";
+<# 
+		foreach(CTable table in _project.DataBaseList[0].TableList)
+	{
+		  WriteLine("      	public CTable{0} {0};",table.Name) ;
+	}
+	#>
+        public void Init()
+        {
+<# 
+		foreach(CTable table in _project.DataBaseList[0].TableList)
+	{
+		  WriteLine("  			{0} = new CTable{0}(this);",table.Name) ;
+	}
+
+	foreach(CTable table in _project.DataBaseList[0].TableList)
+	{#>	
+		  _tables.Add("<#= table.Name#>",<#= table.Name#>);<#
+	}#>	
+		}
+<#
+ 	if (!string.IsNullOrEmpty(db.TableLang) )
+{#>        
+        #region Члены iLangDatabase
+
+        public iTable TableLang
+        {
+            get { return <#=  db.TableLang #> ; }
+        }
+
+        public int BaseLang
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        #endregion
+<#}#>        
+<# 	if (!string.IsNullOrEmpty(db.TableCaption) )
+{#>        
+
+        #region Члены iCaptionDB
+
+        public iCaption TableCaption
+        {
+            get { return <#=  db.TableCaption #> ; }
+        }
+
+        public iTable TableLocString
+        {
+            get { return <#=  db.TableLocString #> ; }
+        }
+
+        #endregion    
+<#}#>        
+
+	}
+}

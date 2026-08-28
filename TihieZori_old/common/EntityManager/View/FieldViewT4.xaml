@@ -1,0 +1,94 @@
+﻿<UserControl x:Class="EntityManager.View.FieldViewT4"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="500">
+	<StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Первичный ключ, автонумератор</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.Id}"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Наименование параметра</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.Name}"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Комментарий</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.Comment}"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Ссылка на таблицу</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.TableId}"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Тип SQL</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.FType}"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Размер</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.Size}"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Размер2</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.Size2}"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Тип Cs</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.FTypeCS}"/>
+		</StackPanel>
+      <DockPanel >
+            <Label Width="120" Height="28" >Автонумератор</Label>
+            <CheckBox Width="16" Height="16" IsChecked="{Binding Selected.IsIdentity}"/>
+        </DockPanel>
+
+      <DockPanel >
+            <Label Width="120" Height="28" >Входит в перв. ключ</Label>
+            <CheckBox Width="16" Height="16" IsChecked="{Binding Selected.IsPrimary}"/>
+        </DockPanel>
+
+      <DockPanel >
+            <Label Width="120" Height="28" >Nullable</Label>
+            <CheckBox Width="16" Height="16" IsChecked="{Binding Selected.IsNullable}"/>
+        </DockPanel>
+
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Значение по умолчанию</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.DefaultValue}"/>
+		</StackPanel>
+      <DockPanel >
+            <Label Width="120" Height="28" >Только чтение</Label>
+            <CheckBox Width="16" Height="16" IsChecked="{Binding Selected.IsReadOnly}"/>
+        </DockPanel>
+
+      <DockPanel >
+            <Label Width="120" Height="28" >Логировать</Label>
+            <CheckBox Width="16" Height="16" IsChecked="{Binding Selected.IsChangesLog}"/>
+        </DockPanel>
+
+      <DockPanel >
+            <Label Width="120" Height="28" >Отложенное</Label>
+            <CheckBox Width="16" Height="16" IsChecked="{Binding Selected.IsPostPoned}"/>
+        </DockPanel>
+
+      <DockPanel >
+            <Label Width="120" Height="28" >Мультиязыковое</Label>
+            <CheckBox Width="16" Height="16" IsChecked="{Binding Selected.IsMultiLang}"/>
+        </DockPanel>
+
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Ссылка на таблицу</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.ForeignKeyTable}"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Ссылка объект</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.ForeignObjectName}"/>
+		</StackPanel>
+		<StackPanel Orientation="Horizontal">
+			<Label Width="120" Height="28" >Кешировать объект</Label>
+			<TextBox Width="200" Height="23" Text="{Binding Selected.IsCashForeignObj}"/>
+		</StackPanel>
+	</StackPanel>
+
+</UserControl>
