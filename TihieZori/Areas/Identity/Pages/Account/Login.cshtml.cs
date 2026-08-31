@@ -10,16 +10,11 @@ namespace TihieZori.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly UserManager<AppUser> _userManager;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(
-            SignInManager<AppUser> signInManager,
-            UserManager<AppUser> userManager,
-            ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<AppUser> signInManager, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
-            _userManager = userManager;
             _logger = logger;
         }
 
@@ -51,7 +46,7 @@ namespace TihieZori.Areas.Identity.Pages.Account
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
-                ViewData["LoginError"] = ErrorMessage;
+                ModelState.AddModelError(string.Empty, ErrorMessage);
             }
 
             returnUrl ??= Url.Content("~/");
@@ -66,62 +61,13 @@ namespace TihieZori.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
 
-            // Очищаем старые ошибки
-            ViewData["LoginError"] = null;
-            ViewData["EmailError"] = null;
-            ViewData["PasswordError"] = null;
-
-            // Проверяем обязательные поля
-            if (string.IsNullOrWhiteSpace(Input.Email))
+            if (ModelState.IsValid)
             {
-                ViewData["EmailError"] = "Введите email";
-                return Page();
-            }
-
-            if (string.IsNullOrWhiteSpace(Input.Password))
-            {
-                ViewData["PasswordError"] = "Введите пароль";
-                return Page();
-            }
-
-            // Проверяем валидность email
-            if (!new EmailAddressAttribute().IsValid(Input.Email))
-            {
-                ViewData["EmailError"] = "Некорректный email";
-                return Page();
-            }
-
-            try
-            {
-                // Проверяем, существует ли пользователь
-                var user = await _userManager.FindByEmailAsync(Input.Email);
-                if (user == null)
-                {
-                    ViewData["LoginError"] = "Неверный email или пароль";
-                    _logger.LogWarning("Login attempt with non-existent email: {Email}", Input.Email);
-                    Input.Password = "";
-                    return Page();
-                }
-
-                // Проверяем, активен ли пользователь
-                if (!user.IsActive)
-                {
-                    ViewData["LoginError"] = "Аккаунт заблокирован. Обратитесь к администратору";
-                    _logger.LogWarning("Inactive user tried to login: {Email}", Input.Email);
-                    Input.Password = "";
-                    return Page();
-                }
-
-                // Пытаемся войти
-                var result = await _signInManager.PasswordSignInAsync(
-                    Input.Email,
-                    Input.Password,
-                    Input.RememberMe,
-                    lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in: {Email}", Input.Email);
+                    _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }
 
@@ -132,23 +78,16 @@ namespace TihieZori.Areas.Identity.Pages.Account
 
                 if (result.IsLockedOut)
                 {
-                    ViewData["LoginError"] = "Аккаунт временно заблокирован. Попробуйте позже";
-                    _logger.LogWarning("User account locked out: {Email}", Input.Email);
-                    return Page();
+                    _logger.LogWarning("User account locked out.");
+                    return RedirectToPage("./Lockout");
                 }
 
-                // Неправильный пароль
-                ViewData["LoginError"] = "Неверный email или пароль";
-                _logger.LogWarning("Invalid password for: {Email}", Input.Email);
-                Input.Password = "";
+                ModelState.AddModelError(string.Empty, "Неверный email или пароль.");
                 return Page();
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error during login for: {Email}", Input?.Email ?? "unknown");
-                ViewData["LoginError"] = "Произошла ошибка при входе. Попробуйте позже";
-                return Page();
-            }
+
+            return Page();
         }
+        
     }
 }

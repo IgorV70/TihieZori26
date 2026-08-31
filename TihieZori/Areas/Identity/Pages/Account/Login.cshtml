@@ -89,86 +89,7 @@
         }
     }
 
-    /* Стили для ошибок */
-    .error-message {
-        background: linear-gradient(135deg, #f8d7da 0%, #f5c2c7 100%);
-        border: 1px solid #f5c2c7;
-        border-radius: 0.75rem;
-        padding: 1rem 1.25rem;
-        margin-bottom: 1.5rem;
-        color: #842029;
-        animation: slideDown 0.3s ease-out;
-        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.15);
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-        .error-message .error-icon {
-            font-size: 1.5rem;
-            flex-shrink: 0;
-        }
-
-        .error-message .error-text {
-            font-weight: 500;
-            font-size: 1rem;
-            margin: 0;
-        }
-
-    .field-error {
-        color: #dc3545;
-        font-size: 0.875rem;
-        font-weight: 500;
-        display: block;
-        margin-top: 4px;
-        animation: slideDown 0.3s ease-out;
-    }
-
-    .input-error {
-        border-color: #dc3545 !important;
-        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
-        animation: shake 0.5s ease-in-out;
-    }
-
-    .shake {
-        animation: shake 0.5s ease-in-out;
-    }
-
-    @@keyframes shake {
-        0%, 100% {
-            transform: translateX(0);
-        }
-
-        20% {
-            transform: translateX(-12px);
-        }
-
-        40% {
-            transform: translateX(12px);
-        }
-
-        60% {
-            transform: translateX(-8px);
-        }
-
-        80% {
-            transform: translateX(8px);
-        }
-    }
-
-    @@keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* Стили для поля пароля с кнопкой */
+    /* Стили для поля пароля с кнопкой показа */
     .password-toggle {
         position: relative;
     }
@@ -184,8 +105,9 @@
             background: transparent;
             border: none;
             padding: 8px;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             transition: color 0.3s ease;
+            line-height: 1;
         }
 
             .password-toggle .toggle-password:hover {
@@ -200,6 +122,42 @@
         .password-toggle input {
             padding-right: 50px !important;
         }
+
+    /* Стили для ошибок */
+    .validation-summary-errors {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c2c7 100%);
+        border: 1px solid #f5c2c7;
+        border-radius: 0.75rem;
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 1.5rem;
+        color: #842029;
+        animation: slideDown 0.3s ease-out;
+    }
+
+        .validation-summary-errors ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .validation-summary-errors li {
+            list-style-type: none;
+        }
+
+            .validation-summary-errors li::before {
+                content: "⚠️ ";
+            }
+
+    @@keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 </style>
 
 <div class="row justify-content-center">
@@ -212,54 +170,37 @@
                     <p class="text-muted">Войдите в свою учетную запись</p>
                 </div>
 
-                <form id="account" method="post">
+                <form id="account" method="post" asp-page-handler="Login">
                     @Html.AntiForgeryToken()
 
-                    <!-- Контейнер для ошибок -->
-                    <div id="errorContainer">
-                        @if (ViewData["LoginError"] != null)
-                        {
-                            <div class="error-message shake" id="loginError" role="alert">
-                                <span class="error-icon">❌</span>
-                                <p class="error-text">@ViewData["LoginError"]</p>
-                            </div>
-                        }
-                    </div>
+                    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
 
                     <div class="form-floating mb-3">
                         <input asp-for="Input.Email" class="form-control" placeholder="name@example.com" />
                         <label asp-for="Input.Email">Email</label>
-                        <span asp-validation-for="Input.Email" class="text-danger" id="emailError"></span>
-                        @if (ViewData["EmailError"] != null)
-                        {
-                            <span class="field-error" id="emailErrorManual">@ViewData["EmailError"]</span>
-                        }
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
                     </div>
 
+                    <!-- Поле пароля с кнопкой показать/скрыть -->
                     <div class="form-floating mb-3 password-toggle">
                         <input asp-for="Input.Password" class="form-control" placeholder="password"
-                               />
+                               type="password" id="Input_Password" />
                         <label asp-for="Input.Password">Пароль</label>
                         <button type="button" class="toggle-password" id="togglePassword"
-                                aria-label="Показать/скрыть пароль">
+                                aria-label="Показать/скрыть пароль" tabindex="-1">
                             <i class="bi bi-eye" id="passwordIcon"></i>
                         </button>
-                        <span asp-validation-for="Input.Password" class="text-danger" id="passwordError"></span>
-                        @if (ViewData["PasswordError"] != null)
-                        {
-                            <span class="field-error" id="passwordErrorManual">@ViewData["PasswordError"]</span>
-                        }
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
                     </div>
 
+                    <!-- Красивый чекбокс -->
                     <div class="mb-3">
                         <label class="custom-checkbox">
-                            <input type="checkbox" asp-for="Input.RememberMe"
-                                   id="Input_RememberMe" name="Input.RememberMe" value="true" />
+                            <input type="checkbox" asp-for="Input.RememberMe" />
                             <span class="checkbox-label">
                                 <i class="bi bi-clock-history"></i> Запомнить меня
                             </span>
                         </label>
-                        <input type="hidden" name="Input.RememberMe" value="false" />
                     </div>
 
                     <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">
@@ -273,13 +214,19 @@
                             </a>
                         </p>
                         <p>
-                            <a asp-page="/Account/ForgotPassword" class="text-decoration-none text-muted small">
+                            <a id="forgot-password" asp-page="./ForgotPassword" class="text-decoration-none text-muted small">
                                 <i class="bi bi-key"></i> Забыли пароль?
                             </a>
                         </p>
                     </div>
                 </form>
             </div>
+        </div>
+
+        <div class="text-center mt-3">
+            <p class="text-white-50 small">
+                <i class="bi bi-shield-check"></i> Безопасный вход
+            </p>
         </div>
     </div>
 </div>
@@ -302,95 +249,6 @@
                     icon.removeClass('bi-eye-slash').addClass('bi-eye');
                 }
             });
-
-            // Функция для проверки наличия ошибок
-            function hasErrors() {
-                return $('#loginError').length > 0 ||
-                    $('#emailErrorManual').length > 0 ||
-                    $('#passwordErrorManual').length > 0 ||
-                    $('.field-error').length > 0;
-            }
-
-            // НЕ скрываем ошибки при вводе, если они пришли с сервера
-            // Только если пользователь начал исправлять поле с ошибкой
-            $('#Input_Email, #Input_Password').on('input', function() {
-                const field = $(this);
-                const fieldId = field.attr('id');
-
-                // Убираем подсветку ошибки
-                field.removeClass('input-error');
-
-                // Удаляем manual ошибку для этого поля
-                if (fieldId === 'Input_Email') {
-                    $('#emailErrorManual').remove();
-                } else if (fieldId === 'Input_Password') {
-                    $('#passwordErrorManual').remove();
-                }
-
-                // Проверяем, остались ли еще ошибки
-                if (!hasErrors()) {
-                    $('#loginError').fadeOut(300);
-                }
-            });
-
-            // Валидация перед отправкой
-            $('#login-submit').on('click', function(e) {
-                // Не блокируем отправку, просто подсвечиваем пустые поля
-                const email = $('#Input_Email').val().trim();
-                const password = $('#Input_Password').val();
-
-                let hasClientError = false;
-
-                // Удаляем старые клиентские ошибки
-                $('#emailErrorManual, #passwordErrorManual, #loginError').remove();
-
-                if (!email) {
-                    $('#Input_Email').addClass('input-error');
-                    $('#Input_Email').closest('.form-floating').append(
-                        '<span class="field-error" id="emailErrorManual">Введите email</span>'
-                    );
-                    hasClientError = true;
-                }
-
-                if (!password) {
-                    $('#Input_Password').addClass('input-error');
-                    $('#Input_Password').closest('.form-floating').append(
-                        '<span class="field-error" id="passwordErrorManual">Введите пароль</span>'
-                    );
-                    hasClientError = true;
-                }
-
-                // Если есть клиентские ошибки - показываем и блокируем отправку
-                if (hasClientError) {
-                    e.preventDefault();
-                    $('#errorContainer').prepend(`
-                                <div class="error-message shake" id="loginError" role="alert">
-                                    <span class="error-icon">⚠️</span>
-                                    <p class="error-text">Пожалуйста, заполните все обязательные поля</p>
-                                </div>
-                            `);
-                    return false;
-                }
-            });
-
-            // Скрываем ошибки при фокусе на поле (только клиентские)
-            $('#Input_Email, #Input_Password').on('focus', function() {
-                const field = $(this);
-                const fieldId = field.attr('id');
-
-                if (fieldId === 'Input_Email') {
-                    $('#emailErrorManual').remove();
-                } else if (fieldId === 'Input_Password') {
-                    $('#passwordErrorManual').remove();
-                }
-
-                field.removeClass('input-error');
-
-                // Если нет других ошибок - скрываем общую
-                if (!hasErrors()) {
-                    $('#loginError').fadeOut(300);
-                }
-            });
-        });
+                });
     </script>
 }
