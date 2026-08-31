@@ -51,7 +51,7 @@ namespace TihieZori.Areas.Identity.Pages.Account
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
-                ModelState.AddModelError(string.Empty, ErrorMessage);
+                ViewData["LoginError"] = ErrorMessage;
             }
 
             returnUrl ??= Url.Content("~/");
@@ -66,12 +66,28 @@ namespace TihieZori.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
 
-            // Логируем состояние для отладки
-            _logger.LogInformation("Login attempt for: {Email}", Input?.Email ?? "null");
+            // Очищаем старые ошибки
+            ViewData["LoginError"] = null;
+            ViewData["EmailError"] = null;
+            ViewData["PasswordError"] = null;
 
-            if (!ModelState.IsValid)
+            // Проверяем обязательные поля
+            if (string.IsNullOrWhiteSpace(Input.Email))
             {
-                _logger.LogWarning("Model state is invalid");
+                ViewData["EmailError"] = "Введите email";
+                return Page();
+            }
+
+            if (string.IsNullOrWhiteSpace(Input.Password))
+            {
+                ViewData["PasswordError"] = "Введите пароль";
+                return Page();
+            }
+
+            // Проверяем валидность email
+            if (!new EmailAddressAttribute().IsValid(Input.Email))
+            {
+                ViewData["EmailError"] = "Некорректный email";
                 return Page();
             }
 
@@ -81,8 +97,8 @@ namespace TihieZori.Areas.Identity.Pages.Account
                 var user = await _userManager.FindByEmailAsync(Input.Email);
                 if (user == null)
                 {
-                    _logger.LogWarning("User not found: {Email}", Input.Email);
-                    ModelState.AddModelError(string.Empty, "❌ Неверный email или пароль.");
+                    ViewData["LoginError"] = "Неверный email или пароль";
+                    _logger.LogWarning("Login attempt with non-existent email: {Email}", Input.Email);
                     Input.Password = "";
                     return Page();
                 }
@@ -90,8 +106,8 @@ namespace TihieZori.Areas.Identity.Pages.Account
                 // Проверяем, активен ли пользователь
                 if (!user.IsActive)
                 {
+                    ViewData["LoginError"] = "Аккаунт заблокирован. Обратитесь к администратору";
                     _logger.LogWarning("Inactive user tried to login: {Email}", Input.Email);
-                    ModelState.AddModelError(string.Empty, "❌ Аккаунт заблокирован. Обратитесь к администратору.");
                     Input.Password = "";
                     return Page();
                 }
@@ -116,21 +132,21 @@ namespace TihieZori.Areas.Identity.Pages.Account
 
                 if (result.IsLockedOut)
                 {
+                    ViewData["LoginError"] = "Аккаунт временно заблокирован. Попробуйте позже";
                     _logger.LogWarning("User account locked out: {Email}", Input.Email);
-                    ModelState.AddModelError(string.Empty, "🔒 Аккаунт временно заблокирован. Попробуйте позже.");
                     return Page();
                 }
 
                 // Неправильный пароль
+                ViewData["LoginError"] = "Неверный email или пароль";
                 _logger.LogWarning("Invalid password for: {Email}", Input.Email);
-                ModelState.AddModelError(string.Empty, "❌ Неверный email или пароль.");
                 Input.Password = "";
                 return Page();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error during login for: {Email}", Input?.Email ?? "unknown");
-                ModelState.AddModelError(string.Empty, "⚠️ Произошла ошибка при входе. Попробуйте позже.");
+                ViewData["LoginError"] = "Произошла ошибка при входе. Попробуйте позже";
                 return Page();
             }
         }
