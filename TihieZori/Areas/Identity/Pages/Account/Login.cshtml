@@ -17,68 +17,154 @@
         border-radius: 8px;
         transition: background-color 0.3s ease;
     }
-    
-    .custom-checkbox:hover {
-        background-color: rgba(13, 110, 253, 0.05);
-    }
-    
-    .custom-checkbox input[type="checkbox"] {
-        appearance: none;
-        -webkit-appearance: none;
-        width: 22px;
-        height: 22px;
-        border: 2px solid #d1d5db;
-        border-radius: 6px;
-        outline: none;
-        cursor: pointer;
-        position: relative;
-        transition: all 0.3s ease;
-        flex-shrink: 0;
-        background-color: white;
-    }
-    
-    .custom-checkbox input[type="checkbox"]:checked {
-        background-color: #0d6efd;
-        border-color: #0d6efd;
-        animation: checkPop 0.3s ease;
-    }
-    
-    .custom-checkbox input[type="checkbox"]:checked::after {
-        content: '✓';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        font-size: 16px;
-        font-weight: bold;
-    }
-    
-    .custom-checkbox input[type="checkbox"]:hover {
-        border-color: #0d6efd;
-        transform: scale(1.05);
-    }
-    
-    .custom-checkbox input[type="checkbox"]:focus {
-        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
-    }
-    
-    .custom-checkbox .checkbox-label {
-        color: #4b5563;
-        font-size: 0.95rem;
-        cursor: pointer;
-        transition: color 0.3s ease;
-        font-weight: 500;
-    }
-    
-    .custom-checkbox:hover .checkbox-label {
-        color: #0d6efd;
-    }
-    
+
+        .custom-checkbox:hover {
+            background-color: rgba(13, 110, 253, 0.05);
+        }
+
+        .custom-checkbox input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid #d1d5db;
+            border-radius: 6px;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            background-color: white;
+        }
+
+            .custom-checkbox input[type="checkbox"]:checked {
+                background-color: #0d6efd;
+                border-color: #0d6efd;
+                animation: checkPop 0.3s ease;
+            }
+
+                .custom-checkbox input[type="checkbox"]:checked::after {
+                    content: '✓';
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    color: white;
+                    font-size: 16px;
+                    font-weight: bold;
+                }
+
+            .custom-checkbox input[type="checkbox"]:hover {
+                border-color: #0d6efd;
+                transform: scale(1.05);
+            }
+
+            .custom-checkbox input[type="checkbox"]:focus {
+                box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+            }
+
+        .custom-checkbox .checkbox-label {
+            color: #4b5563;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .custom-checkbox:hover .checkbox-label {
+            color: #0d6efd;
+        }
+
     @@keyframes checkPop {
-        0% { transform: scale(0.8); }
-        50% { transform: scale(1.2); }
-        100% { transform: scale(1); }
+        0% {
+            transform: scale(0.8);
+        }
+
+        50% {
+            transform: scale(1.2);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    /* Стили для ошибок */
+    .validation-summary-errors {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c2c7 100%);
+        border: 1px solid #f5c2c7;
+        border-radius: 0.75rem;
+        padding: 1rem 1.25rem;
+        margin-bottom: 1.5rem;
+        color: #842029;
+        animation: slideDown 0.3s ease-out;
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.15);
+    }
+
+        .validation-summary-errors ul {
+            margin: 0;
+            padding-left: 0;
+        }
+
+        .validation-summary-errors li {
+            list-style-type: none;
+            font-weight: 500;
+            padding: 4px 0;
+        }
+
+            .validation-summary-errors li::before {
+                content: "❌ ";
+            }
+
+    .field-validation-error {
+        color: #dc3545;
+        font-size: 0.875rem;
+        font-weight: 500;
+        display: block;
+        margin-top: 4px;
+    }
+
+    .input-validation-error {
+        border-color: #dc3545 !important;
+        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
+    }
+
+    .shake {
+        animation: shake 0.5s ease-in-out;
+    }
+
+    @@keyframes shake {
+        0%, 100% {
+            transform: translateX(0);
+        }
+
+        20% {
+            transform: translateX(-12px);
+        }
+
+        40% {
+            transform: translateX(12px);
+        }
+
+        60% {
+            transform: translateX(-8px);
+        }
+
+        80% {
+            transform: translateX(8px);
+        }
+    }
+
+    @@keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 </style>
 
@@ -92,46 +178,46 @@
                     <p class="text-muted">Войдите в свою учетную запись</p>
                 </div>
 
-               <form id="account" method="post" asp-page-handler="Login">
+                <form id="account" method="post">
                     @Html.AntiForgeryToken()
-                    
-                    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-                    
+
+                    <!-- Блок ошибок - показывается только если есть ошибки -->
+                    @if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+                    {
+                        <div class="validation-summary-errors shake" role="alert">
+                            <div asp-validation-summary="ModelOnly"></div>
+                        </div>
+                    }
+
                     <div class="form-floating mb-3">
-                        <input asp-for="Input.Email" name="Input.Email" id="Input_Email" class="form-control" placeholder="name@example.com" />
+                        <input asp-for="Input.Email" class="form-control" placeholder="name@example.com"
+                               id="Input_Email" name="Input.Email" />
                         <label asp-for="Input.Email">Email</label>
-                        <span asp-validation-for="Input.Email" class="text-danger"></span>
-                    </div>
-                    
-                    <div class="form-floating mb-3">
-                        <input asp-for="Input.Password" name="Input.Password" id="Input_Password" class="form-control" placeholder="password" />
-                        <label asp-for="Input.Password">Пароль</label>
-                        <span asp-validation-for="Input.Password" class="text-danger"></span>
-                    </div>
-                    
-                    <!-- Ошибка "Неверный email или пароль" будет показана здесь -->
-                    <div id="loginError" class="text-danger mb-3" style="display:none;">
-                        <i class="bi bi-exclamation-triangle"></i>
-                        <span id="errorMessage"></span>
+                        <span asp-validation-for="Input.Email" class="field-validation-error"></span>
                     </div>
 
-                    <!-- Красивый чекбокс -->
-                    <div class="mb-3">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" asp-for="Input.RememberMe" 
-                                   id="Input_RememberMe" name="Input.RememberMe" value="true" />
-                            <label class="form-check-label" for="Input_RememberMe">
-                                <i class="bi bi-clock-history"></i> Запомнить меня
-                            </label>
-                            <!-- Скрытое поле для отправки false, когда чекбокс не отмечен -->
-                            <input type="hidden" name="Input.RememberMe" value="false" />
-                        </div>
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.Password" class="form-control" placeholder="password"
+                               id="Input_Password" name="Input.Password" />
+                        <label asp-for="Input.Password">Пароль</label>
+                        <span asp-validation-for="Input.Password" class="field-validation-error"></span>
                     </div>
-                    
+
+                    <div class="mb-3">
+                        <label class="custom-checkbox">
+                            <input type="checkbox" asp-for="Input.RememberMe"
+                                   id="Input_RememberMe" name="Input.RememberMe" value="true" />
+                            <span class="checkbox-label">
+                                <i class="bi bi-clock-history"></i> Запомнить меня
+                            </span>
+                        </label>
+                        <input type="hidden" name="Input.RememberMe" value="false" />
+                    </div>
+
                     <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">
                         <i class="bi bi-box-arrow-in-right"></i> Войти
                     </button>
-                    
+
                     <div class="mt-4 text-center">
                         <p>
                             <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none">
@@ -147,7 +233,7 @@
                 </form>
             </div>
         </div>
-        
+
         <div class="text-center mt-3">
             <p class="text-white-50 small">
                 <i class="bi bi-shield-check"></i> Безопасный вход
@@ -158,4 +244,35 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(document).ready(function() {
+            // Подсветка полей с ошибками
+            $('.field-validation-error').each(function() {
+                var input = $(this).closest('.form-floating').find('input');
+                if ($(this).text().trim() !== '') {
+                    input.addClass('input-validation-error');
+                }
+            });
+
+            // Очищаем ошибки при вводе
+            $('input').on('input', function() {
+                $(this).removeClass('input-validation-error');
+                var errorSpan = $(this).closest('.form-floating').find('.field-validation-error');
+                errorSpan.text('');
+                errorSpan.hide();
+
+                // Скрываем общую ошибку
+                $('.validation-summary-errors').fadeOut(300);
+            });
+
+            // Добавляем анимацию при фокусе на поле с ошибкой
+            $('.input-validation-error').on('focus', function() {
+                $(this).closest('.form-floating').addClass('shake');
+                setTimeout(function() {
+                    $('.form-floating').removeClass('shake');
+                }, 500);
+            });
+        });
+    </script>
 }
