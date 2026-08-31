@@ -88,36 +88,6 @@ namespace TihieZori.Areas.Identity.Pages.Account
 
             return Page();
         }
-        public async Task<IActionResult> OnPostLoginAsync(string? returnUrl = null)
-        {
-            returnUrl ??= Url.Content("~/");
-
-            if (ModelState.IsValid)
-            {
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-
-                if (result.Succeeded)
-                {
-                    _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
-                }
-
-                if (result.RequiresTwoFactor)
-                {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-                }
-
-                if (result.IsLockedOut)
-                {
-                    _logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout");
-                }
-
-                ModelState.AddModelError(string.Empty, "Неверный email или пароль.");
-                return Page();
-            }
-
-            return Page();
-        }
+       
     }
 }
