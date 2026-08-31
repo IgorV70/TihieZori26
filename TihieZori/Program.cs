@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using TihieZori.Data;
 using TihieZori.Models;
@@ -13,6 +14,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 builder.Services.AddDefaultIdentity<AppUser>(options =>
 {

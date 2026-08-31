@@ -17,68 +17,146 @@
         border-radius: 8px;
         transition: background-color 0.3s ease;
     }
-    
-    .custom-checkbox:hover {
-        background-color: rgba(13, 110, 253, 0.05);
-    }
-    
-    .custom-checkbox input[type="checkbox"] {
-        appearance: none;
-        -webkit-appearance: none;
-        width: 22px;
-        height: 22px;
-        border: 2px solid #d1d5db;
-        border-radius: 6px;
-        outline: none;
-        cursor: pointer;
-        position: relative;
-        transition: all 0.3s ease;
-        flex-shrink: 0;
-        background-color: white;
-    }
-    
-    .custom-checkbox input[type="checkbox"]:checked {
-        background-color: #0d6efd;
-        border-color: #0d6efd;
-        animation: checkPop 0.3s ease;
-    }
-    
-    .custom-checkbox input[type="checkbox"]:checked::after {
-        content: '✓';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        font-size: 16px;
-        font-weight: bold;
-    }
-    
-    .custom-checkbox input[type="checkbox"]:hover {
-        border-color: #0d6efd;
-        transform: scale(1.05);
-    }
-    
-    .custom-checkbox input[type="checkbox"]:focus {
-        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
-    }
-    
-    .custom-checkbox .checkbox-label {
-        color: #4b5563;
-        font-size: 0.95rem;
-        cursor: pointer;
-        transition: color 0.3s ease;
-        font-weight: 500;
-    }
-    
-    .custom-checkbox:hover .checkbox-label {
-        color: #0d6efd;
-    }
-    
+
+        .custom-checkbox:hover {
+            background-color: rgba(13, 110, 253, 0.05);
+        }
+
+        .custom-checkbox input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid #d1d5db;
+            border-radius: 6px;
+            outline: none;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+            background-color: white;
+        }
+
+            .custom-checkbox input[type="checkbox"]:checked {
+                background-color: #0d6efd;
+                border-color: #0d6efd;
+                animation: checkPop 0.3s ease;
+            }
+
+                .custom-checkbox input[type="checkbox"]:checked::after {
+                    content: '✓';
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    color: white;
+                    font-size: 16px;
+                    font-weight: bold;
+                }
+
+            .custom-checkbox input[type="checkbox"]:hover {
+                border-color: #0d6efd;
+                transform: scale(1.05);
+            }
+
+            .custom-checkbox input[type="checkbox"]:focus {
+                box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+            }
+
+        .custom-checkbox .checkbox-label {
+            color: #4b5563;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .custom-checkbox:hover .checkbox-label {
+            color: #0d6efd;
+        }
+
     @@keyframes checkPop {
-        0% { transform: scale(0.8); }
-        50% { transform: scale(1.2); }
-        100% { transform: scale(1); }
+        0% {
+            transform: scale(0.8);
+        }
+
+        50% {
+            transform: scale(1.2);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    /* Стили для поля пароля с кнопкой показа */
+    .password-toggle {
+        position: relative;
+    }
+
+        .password-toggle .toggle-password {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6c757d;
+            z-index: 10;
+            background: transparent;
+            border: none;
+            padding: 8px;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+            line-height: 1;
+        }
+
+            .password-toggle .toggle-password:hover {
+                color: #0d6efd;
+            }
+
+            .password-toggle .toggle-password:focus {
+                outline: none;
+                color: #0a58ca;
+            }
+
+        .password-toggle input {
+            padding-right: 50px !important;
+        }
+
+    /* Стили для ошибок */
+    .validation-summary-errors {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c2c7 100%);
+        border: 1px solid #f5c2c7;
+        border-radius: 0.75rem;
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 1.5rem;
+        color: #842029;
+        animation: slideDown 0.3s ease-out;
+    }
+
+        .validation-summary-errors ul {
+            margin: 0;
+            padding-left: 1.5rem;
+        }
+
+        .validation-summary-errors li {
+            list-style-type: none;
+        }
+
+            .validation-summary-errors li::before {
+                content: "⚠️ ";
+            }
+
+    @@keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 </style>
 
@@ -92,27 +170,27 @@
                     <p class="text-muted">Войдите в свою учетную запись</p>
                 </div>
 
-               <form id="account" method="post" asp-page-handler="Login">
+                <form id="account" method="post" asp-page-handler="Login">
                     @Html.AntiForgeryToken()
-                    
+
                     <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-                    
+
                     <div class="form-floating mb-3">
                         <input asp-for="Input.Email" class="form-control" placeholder="name@example.com" />
                         <label asp-for="Input.Email">Email</label>
                         <span asp-validation-for="Input.Email" class="text-danger"></span>
                     </div>
-                    
-                    <div class="form-floating mb-3">
-                        <input asp-for="Input.Password" class="form-control" placeholder="password" />
+
+                    <!-- Поле пароля с кнопкой показать/скрыть -->
+                    <div class="form-floating mb-3 password-toggle">
+                        <input asp-for="Input.Password" class="form-control" placeholder="password"
+                               type="password" id="Input_Password" />
                         <label asp-for="Input.Password">Пароль</label>
+                        <button type="button" class="toggle-password" id="togglePassword"
+                                aria-label="Показать/скрыть пароль" tabindex="-1">
+                            <i class="bi bi-eye" id="passwordIcon"></i>
+                        </button>
                         <span asp-validation-for="Input.Password" class="text-danger"></span>
-                    </div>
-                    
-                    <!-- Ошибка "Неверный email или пароль" будет показана здесь -->
-                    <div id="loginError" class="text-danger mb-3" style="display:none;">
-                        <i class="bi bi-exclamation-triangle"></i>
-                        <span id="errorMessage"></span>
                     </div>
 
                     <!-- Красивый чекбокс -->
@@ -124,11 +202,11 @@
                             </span>
                         </label>
                     </div>
-                    
+
                     <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">
                         <i class="bi bi-box-arrow-in-right"></i> Войти
                     </button>
-                    
+
                     <div class="mt-4 text-center">
                         <p>
                             <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-decoration-none">
@@ -144,7 +222,7 @@
                 </form>
             </div>
         </div>
-        
+
         <div class="text-center mt-3">
             <p class="text-white-50 small">
                 <i class="bi bi-shield-check"></i> Безопасный вход
@@ -155,4 +233,22 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(document).ready(function() {
+            // Переключение видимости пароля
+            $('#togglePassword').on('click', function() {
+                const passwordInput = $('#Input_Password');
+                const icon = $('#passwordIcon');
+
+                if (passwordInput.attr('type') === 'password') {
+                    passwordInput.attr('type', 'text');
+                    icon.removeClass('bi-eye').addClass('bi-eye-slash');
+                } else {
+                    passwordInput.attr('type', 'password');
+                    icon.removeClass('bi-eye-slash').addClass('bi-eye');
+                }
+            });
+                });
+    </script>
 }
