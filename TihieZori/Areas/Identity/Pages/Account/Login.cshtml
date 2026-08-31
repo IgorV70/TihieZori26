@@ -98,13 +98,13 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                     
                     <div class="form-floating mb-3">
-                        <input asp-for="Input.Email" class="form-control" placeholder="name@example.com" />
+                        <input asp-for="Input.Email" name="Input.Email" class="form-control" placeholder="name@example.com" />
                         <label asp-for="Input.Email">Email</label>
                         <span asp-validation-for="Input.Email" class="text-danger"></span>
                     </div>
                     
                     <div class="form-floating mb-3">
-                        <input asp-for="Input.Password" class="form-control" placeholder="password" />
+                        <input asp-for="Input.Password" name="Input.Password" class="form-control" placeholder="password" />
                         <label asp-for="Input.Password">Пароль</label>
                         <span asp-validation-for="Input.Password" class="text-danger"></span>
                     </div>
@@ -118,7 +118,7 @@
                     <!-- Красивый чекбокс -->
                     <div class="mb-3">
                         <label class="custom-checkbox">
-                            <input type="checkbox" asp-for="Input.RememberMe" />
+                            <input type="checkbox" asp-for="Input.RememberMe" name="Input.RememberMe" />
                             <span class="checkbox-label">
                                 <i class="bi bi-clock-history"></i> Запомнить меня
                             </span>
